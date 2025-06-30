@@ -1,0 +1,8 @@
+#!/bin/bash
+rm executable
+rm -rf executable.dSYM # macOS generated output
+
+clear
+g++ -g -Wall main.cpp -o executable -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-network -lstdc++
+
+./executable
