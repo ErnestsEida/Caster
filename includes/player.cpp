@@ -11,8 +11,7 @@ double const PI = 3.14159265358979323846;
 class Player {
 private:
   float movespeed = 0.1;
-  float rotation_speed = 0.1;
-  float raw_rotation = 0;
+  float rotation_speed = 1;
   int border_x;
   int border_y;
 
@@ -45,6 +44,7 @@ private:
 public:
   float x = 0;
   float y = 0;
+  float raw_rotation = 0;
 
   Player(int x, int y) {
     this->border_x = x;

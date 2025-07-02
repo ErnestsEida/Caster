@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.rb": "ruby",
-        "tx": "cpp"
+        "tx": "cpp",
+        "cmath": "cpp"
     }
 }
