@@ -10,37 +10,51 @@ const int windowHeight = 720;
 const float max_length = 10;
 const float FOV = 90.0f;
 const float FOV_RAD = FOV * (PI / 180.0f);
-const int MAP_W = 16;
-const int MAP_H = 16;
+const int MAP_W = 32;
+const int MAP_H = 32;
+const float BLOCK_HEIGHT = 2;
 
 const short map[MAP_W][MAP_H] = {
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
-
-struct Wall {
-  float distance;
-  int ray_idx;
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 struct Ray {
     Vector2f start;
     Vector2f end;
+    int wall_size;
     int idx;
+    float angle;
 };
 
 float calculateDistance(Vector2f p_coords, Vector2f hit_coords) {
@@ -69,7 +83,7 @@ int main() {
 
   while (window.isOpen()) {
     while (const std::optional event = window.pollEvent()) {
-      if (event->is<Event::Closed>())
+      if (event->is<Event::Closed>() || Keyboard::isKeyPressed(Keyboard::Key::Escape))
         window.close();
     }
 
@@ -87,26 +101,27 @@ int main() {
         
         bool hit = false;
         Vector2f distance({0, 0});
+        int wall_size = 0;
 
-        while(!hit && distance.x < max_length && distance.y < max_length) {
+        while(!hit) {
             c_x += d_x * ray_step;
             c_y += d_y * ray_step;
             distance.x += fabs(d_x * ray_step);
             distance.y += fabs(d_y * ray_step);
 
-            if (map[int(c_y)][int(c_x)] == 1) {
+            if (map[int(c_y)][int(c_x)] != 0) {
                 hit = true;
+                wall_size = map[int(c_y)][int(c_x)];
             }
         }
 
-        // Compute exact hit position
-        if (hit) {
-            Ray r;
-            r.start = playerPos;
-            r.end = {c_x, c_y};
-            r.idx = ray;
-            rays.push_back(r);
-        }
+        Ray r;
+        r.start = playerPos;
+        r.end = {c_x, c_y};
+        r.idx = ray;
+        r.angle = ray_angle;
+        r.wall_size = wall_size;
+        rays.push_back(r);
 
     }
 
@@ -130,11 +145,30 @@ int main() {
         ground_y -= height;
     }
 
+    // Ground
+    float sky_y = windowHeight;
+    float draw_y = 0;
+    while(draw_y < windowHeight / 2) {
+        float height = sky_y / 128;
+        float proportion = (sky_y - (windowHeight/2)) / (windowHeight / 2);
+        int shade = clamp<int>((255 * proportion - 0.2), 0, 255);
+        Color c(shade, shade, shade);
+
+        RectangleShape g;
+        g.setSize({windowWidth, height});
+        g.setPosition({0, draw_y + height});
+        g.setFillColor(c);
+        g.setOrigin({0, height});
+
+        window.draw(g);
+        sky_y -= height;
+        draw_y += height;
+    }
+
     for(Ray r : rays) {
         float distance = calculateDistance(r.start, r.end);
-        float distance_ratio = 1 - (distance / max_length);
-        float height = windowHeight * distance_ratio;
-        float shade = clamp<short>(static_cast<short>(255 * distance_ratio), 0, 255);
+        float height = (windowHeight / 2) * (1/distance) * BLOCK_HEIGHT;
+        float shade = clamp<short>(static_cast<short>(255 * (1/distance)), 0, 200);
         Vector2f position = Vector2f({
             r.idx,
             (windowHeight / 2) - (height / 2)
@@ -148,9 +182,10 @@ int main() {
         window.draw(s);
     }
 
+    float scale = 5;
     float origin_x = 20;
     float origin_y = 20;
-    Vector2f block_size({10, 10});
+    Vector2f block_size({scale, scale});
 
     for(int row = 0; row < MAP_W; ++row) {
         for(int col = 0; col < MAP_H; ++col) {
@@ -164,15 +199,15 @@ int main() {
 
     RectangleShape s({5,5});
     s.setFillColor(Color::Blue);
-    s.setPosition({origin_x + player.x * 10, origin_y + player.y * 10});
+    s.setPosition({origin_x + player.x * scale, origin_y + player.y * scale});
     window.draw(s);
 
     VertexArray drawableRays(PrimitiveType::Lines);
     for(Ray r : rays) {
         Vertex startV;
         Vertex endV;
-        startV.position = Vector2f({origin_x + r.start.x * 10, origin_y + r.start.y * 10});
-        endV.position = Vector2f({origin_x + r.end.x * 10, origin_y + r.end.y * 10});
+        startV.position = Vector2f({origin_x + r.start.x * scale, origin_y + r.start.y * scale});
+        endV.position = Vector2f({origin_x + r.end.x * scale, origin_y + r.end.y * scale});
         startV.color = Color::Yellow;
         endV.color = Color::Yellow;
         drawableRays.append(startV);

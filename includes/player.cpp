@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Graphics.hpp>
 #include <cmath>
 #include <iostream>
 
@@ -10,8 +11,9 @@ double const PI = 3.14159265358979323846;
 
 class Player {
 private:
-  float movespeed = 0.1;
-  float rotation_speed = 1;
+  Vector2i mousePos = Mouse::getPosition();
+  float movespeed = 0.05;
+  float rotation_speed = 0.5;
   int border_x;
   int border_y;
 
@@ -34,11 +36,17 @@ private:
   }
 
   void move_rotation() {
-    if (Keyboard::isKeyPressed(Keyboard::Key::Right)) {
-      this->raw_rotation += rotation_speed;
-    } else if (Keyboard::isKeyPressed(Keyboard::Key::Left)) {
-      this->raw_rotation -= rotation_speed;
-    }
+    Vector2i temp = Mouse::getPosition();
+    
+    float rot_value = temp.x - this->mousePos.x;
+    this->mousePos = temp;
+
+    this->raw_rotation += rot_value * rotation_speed;
+    // if (Keyboard::isKeyPressed(Keyboard::Key::Right)) {
+    //   this->raw_rotation += rotation_speed;
+    // } else if (Keyboard::isKeyPressed(Keyboard::Key::Left)) {
+    //   this->raw_rotation -= rotation_speed;
+    // }
   }
 
 public:
